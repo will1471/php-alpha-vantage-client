@@ -1,6 +1,7 @@
 {
     "name": "will1471/php-alpha-vantage-client",
     "type": "library",
+    "description": "",
     "require": {
         "guzzlehttp/guzzle": "^6.5"
     },
