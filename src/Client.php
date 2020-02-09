@@ -43,7 +43,6 @@ final class Client
                     'function' => 'SYMBOL_SEARCH',
                     'keywords' => $query,
                     'apikey' => $this->apiKey,
-                    'datatype' => 'json'
                 ]
             ]
         );
@@ -73,22 +72,21 @@ final class Client
      */
     public function timeSeriesDailyAdjusted(string $symbol, bool $full = true)
     {
-        $response = $this->http->get(
-            '',
-            [
-                'query' => [
-                    'function' => 'TIME_SERIES_DAILY_ADJUSTED',
-                    'symbol' => $symbol,
-                    'apikey' => $this->apiKey,
-                    'datatype' => 'json',
-                    'outputsize' => ($full ? 'full' : 'compact')
-                ]
-            ]
-        );
+        $query = [
+            'function' => 'TIME_SERIES_DAILY_ADJUSTED',
+            'symbol' => $symbol,
+            'apikey' => $this->apiKey,
+        ];
+
+        if ($full) {
+            $query['outputsize'] = 'full';
+        }
+
+        $response = $this->http->get('', ['query' => $query]);
         $content = $response->getBody()->getContents();
         $obj = json_decode($content);
-        $r = [];
 
+        $r = [];
         foreach ($obj->{"Time Series (Daily)"} as $datetime => $obj) {
             $r[] = new Point(
                 $datetime,
